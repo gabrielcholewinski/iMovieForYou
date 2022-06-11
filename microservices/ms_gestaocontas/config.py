@@ -12,11 +12,11 @@ connex_app = connexion.App(__name__, specification_dir=basedir)
 app = connex_app.app
 
 # Google Cloud SQL (change this accordingly)
-PASSWORD ="carapau2021"
-PUBLIC_IP_ADDRESS ="35.246.153.29"
-DBNAME ="users"
-PROJECT_ID ="cnprojext"
-INSTANCE_NAME ="cn-projecto"
+PASSWORD ="*****"
+PUBLIC_IP_ADDRESS ="**.***.***.**"
+DBNAME ="************"
+PROJECT_ID ="*******"
+INSTANCE_NAME ="*******"
 
 # Configure the SqlAlchemy part of the app instance
 app.config["SQLALCHEMY_ECHO"] = True
