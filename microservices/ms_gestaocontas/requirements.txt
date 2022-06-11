@@ -1,0 +1,11 @@
+flask
+connexion
+requests 
+swagger-ui-bundle
+SQLAlchemy==1.3.23
+flask-marshmallow 
+marshmallow-sqlalchemy 
+marshmallow
+Flask-SQLAlchemy==2.1
+connexion[swagger-ui]
+mysql-connector

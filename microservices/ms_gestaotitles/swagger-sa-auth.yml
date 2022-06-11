@@ -1,0 +1,256 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: IMoviesForYou Swagger ReST API
+consumes:
+  - application/json
+produces:
+  - application/json
+
+host: imoviesforyou.me
+basePath: /gestaotitles
+
+# Authentication for Cloud using Services Account
+securityDefinitions:
+  unified-sa-account-authorization:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "unified-sa-authorization@cnprojext.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/unified-sa-authorization@cnprojext.iam.gserviceaccount.com"
+    x-google-audiences: "http://imoviesforyou.me/gestaotitles,http://imoviesforyou.me/gestaousers,http://imoviesforyou.me/recomendacoes,http://imoviesforyou.me/classificacoes"
+    # x-google-audiences : look if this works for host, then which host, otherwise in python method
+
+# security Seems to require x-token-info-func.
+# Here is app level. It can be defined into path level. I defined just for movie/id level
+# security:
+#   - unified-sa-account-authorization: [ ]
+
+# Paths supported by the server application
+paths:
+  /movies/filtered:
+      get:
+        operationId: movie.read_filtered
+        tags:
+          - Movies
+        summary: Read the all movies with a specific filter
+        description: Read the movies by a specific filter
+        parameters:
+          - name: primaryTitle
+            type: string
+            in: query
+            description: Name of the movie
+            required: False
+          - name: genre
+            type: string
+            in: query
+            description: Genre of the movie
+            required: False
+          - name: region
+            type: string
+            in: query
+            description: Region of the movie
+            required: False
+          - name: language
+            type: string
+            in: query
+            description: Language of the movie
+            required: False
+          - name: startYear
+            type: string
+            in: query
+            description: Launch year of the movie
+            required: False
+        responses:
+          200:
+            description: Successfully read list of movies by a specific filter
+            schema:
+              type: array
+              items:
+                properties:
+                  tconst:
+                    type: integer
+                  primaryTitle:
+                    type: string
+                  startYear:
+                    type: string
+                  endYear:
+                    type: string
+                  runTime:
+                    type: integer
+                  isAdult:
+                    type: integer
+                  genre:
+                    type: string
+                  titles:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          ordering:
+                            type: integer
+                          title:
+                            type: string
+                          region:
+                            type: string
+                          language:
+                            type: string
+                  rating:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          averageRating:
+                            type: number
+                          numVotes:
+                            type: integer
+
+  /movies:
+
+    post:
+      operationId: movie.create
+      tags:
+        - Administrator
+      summary: Add a new movie to the application
+      description: Add a new movie to the application
+      parameters:
+        - name: movie
+          in: body
+          description: Movie to create
+          required: True
+          schema:
+            type: object
+            properties:
+
+
+              titleType:
+                type: string
+                description: Type the movie
+              primaryTitle:
+                type: string
+                description: Name of the movie
+              genre:
+                type: array
+                description: Genre of the movie
+                items:
+                  type: string
+                  enum: [Documentary,Short,Animation,Comedy,Romance,Sport,Action,News,Drama,Fantasy,Horror,Biography,Music,War,Crime,Western,Family,Adventure,History,Mystery,Sci-Fi,Thriller,Musical,Film-Noir,Game-Show,Talk-Show,Reality-TV,Adult]
+              startYear:
+                type: string
+                description: Launch Year of the movie
+              endYear:
+                type: string
+                description: Ending Year of the movie
+              runTime:
+                type: integer
+                description: Runtime of the movie
+              isAdult:
+                type: integer
+                description: Maturity rating of the movie
+              rating:
+                      type: object
+                      properties:
+
+
+                        averageRating:
+                          type: number
+                        numVotes:
+                          type: integer
+              titles:
+                    type: array
+                    description: Names movie can have
+                    items:
+                        type: object
+                        properties:
+
+
+                          ordering:
+                            type: integer
+                          title:
+                            type: string
+                          region:
+                            type: string
+                          language:
+                            type: string
+
+      responses:
+        201:
+          description: Successfully created movie in repository
+
+  /movies/{title_id}:
+    get:
+      operationId: movie.read_one
+      security:
+        - unified-sa-account-authorization: [ ]
+      tags:
+        - Movies
+      summary: Read the details of a specific movie
+      description: Read the details of a specific movie
+      parameters:
+        - name: title_id
+          type: string
+          in: path
+          description: Identifier of the movie
+          required: True
+
+      responses:
+        200:
+          description: Successfully read list of movies by a specific filter
+          schema:
+            type: array
+            items:
+              properties:
+                tconst:
+                  type: integer
+                primaryTitle:
+                  type: string
+                startYear:
+                  type: string
+                endYear:
+                  type: string
+                runTime:
+                  type: integer
+                isAdult:
+                  type: integer
+                genre:
+                  type: string
+                titles:
+                  type: array
+                  items:
+                      type: object
+                      properties:
+                        ordering:
+                          type: integer
+                        title:
+                          type: string
+                        region:
+                          type: string
+                        language:
+                          type: string
+
+                rating:
+                  type: array
+                  items:
+                      type: object
+                      properties:
+                        averageRating:
+                          type: number
+                        numVotes:
+                          type: integer
+
+    delete:
+      operationId: movie.delete
+      tags:
+        - Administrator
+      summary: Delete a movie from the movie list
+      description: Delete a movie
+      parameters:
+        - name: title_id
+          in: path
+          type: string
+          description: Id of the movie to delete
+          required: True
+      responses:
+        200:
+          description: Successfully deleted a movie

@@ -1,0 +1,41 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: IMoviesForYou Swagger ReST API
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /recomendacoes
+
+# Paths supported by the server application
+paths:
+  /user/{user_id}/recommended:
+    get:
+      operationId: userRecomendations.read_recommended
+      tags:
+        - User
+      summary: List all recommended movies for an user 
+      description: List all recommended movies for an user by user watched list
+      parameters:
+        - name: user_id
+          in: path
+          description: User id
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully received user watched list
+          schema:
+           type: array
+           items:
+            type: object
+            properties:
+              movie_id:
+                  type: integer
+              title:
+                  type: string
+              genre:
+                  type: string

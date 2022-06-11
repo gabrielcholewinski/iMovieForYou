@@ -1,0 +1,94 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: IMoviesForYou Swagger ReST API
+consumes:
+  - application/json
+produces:
+  - application/json
+
+# Auth asks host definition here
+host: imoviesforyou.me
+
+basePath: /gestaocontas
+
+# Authentication for Cloud using Services Account
+securityDefinitions:
+  unified-sa-account-authorization:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "unified-sa-authorization@cnprojext.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/unified-sa-authorization@cnprojext.iam.gserviceaccount.com"
+    x-google-audiences: "http://imoviesforyou.me/gestaotitles,http://imoviesforyou.me/gestaousers,http://imoviesforyou.me/recomendacoes,http://imoviesforyou.me/classificacoes"
+    # x-google-audiences : look if this works for host, then which host, otherwise in python method
+
+# security Seems to require x-token-info-func.
+# Here is app level definition.
+security:
+  - unified-sa-account-authorization: [ ]
+
+# Paths supported by the server application
+paths:
+  /user/{user_id}/userMovieList:
+    get:
+      operationId: userMovieList.getMovieUserList
+      tags:
+        - User
+      summary: Get movie user list
+      description: Get movie user list
+      parameters:
+        - name: user_id
+          type: integer
+          in: path
+          required: True
+      responses:
+        200:
+          description: Successfully received user watched list
+          schema:
+           type: array
+           items:
+            properties:
+             movie:
+              type: integer
+                     
+             
+              #type: object
+             # properties:
+               # title:
+               #   type: string
+               # movieId:
+                #  type: integer
+
+    post:
+      operationId: userMovieList.addMovieToUserList
+      tags:
+        - User
+      summary: Add a movie to a user watched list
+      description: Add a movie to a user watched list
+      parameters:
+        - name: user_id
+          type: integer
+          in: path
+          required: True
+        - name: movie
+          in: body
+          description: Movie to add to watched list
+          required: True
+          schema:
+            type: object
+            properties:
+              movieId:
+                type: integer
+      responses:
+        201:
+          description: Successfully added a movie to an user watch list
+          schema:
+           type: array
+           items:
+            properties:
+             user_id:
+              type: integer
+             movie:
+              type: integer
